@@ -16,8 +16,8 @@ body {
 }
 
 .display {
-    background-color: #222;
-    color: white;
+    background-color: #a1d88b;
+    color: black;
     text-align: right;
     padding: 10px;
     font-size: 2em;
@@ -47,4 +47,16 @@ button:hover {
 
 button:active {
     background-color: #999;
+}
+
+button:nth-child(4n) {
+    background-color: #f59e42;
+}
+
+button:nth-child(4n):hover {
+    background-color: #f7b367;
+}
+
+button:nth-child(4n):active {
+    background-color: #d8872d;
 }
