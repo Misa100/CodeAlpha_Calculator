@@ -60,3 +60,20 @@ button:nth-child(4n):hover {
 button:nth-child(4n):active {
     background-color: #d8872d;
 }
+
+.clear-button {
+    background-color: #ff4040;
+    color: white;
+    padding: 10px;
+    font-size: 1.2em;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 10px;
+    display: block;
+}
+
+.clear-button:hover {
+    background-color: #ff7373;
+}
+

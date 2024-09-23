@@ -1,72 +1,95 @@
-let display = document.getElementById('display');
-let currentOperand = '';
-let previousOperand = '';
-let operator = null;
+let currentInput = '';
+let previousInput = '';
+let operator = undefined;
 
+const display = document.getElementById('display');
+
+// Function to update display
+function updateDisplay() {
+    if (operator != null) {
+        display.innerText = `${previousInput} ${operator} ${currentInput}`;
+    } else {
+        display.innerText = currentInput || '0';
+    }
+}
+
+// Function to append numbers
 function appendNumber(number) {
-    if (currentOperand.includes('.') && number === '.') return; // Prevent multiple decimals
-    currentOperand = currentOperand.toString() + number.toString();
+    if (currentInput === '0') {
+        currentInput = number;
+    } else {
+        currentInput += number;
+    }
     updateDisplay();
 }
 
-function updateDisplay() {
-    display.innerText = previousOperand + (operator ? ` ${operator} ` : '') + currentOperand;
-}
-
-function clearDisplay() {
-    currentOperand = '';
-    previousOperand = '';
-    operator = null;
-    display.innerText = '0';
-}
-
-function chooseOperator(op) {
-    if (currentOperand === '' && operator === null) return;
-    if (previousOperand !== '') {
+// Function to choose operator
+function chooseOperator(selectedOperator) {
+    if (currentInput === '' && previousInput === '') return;
+    if (previousInput !== '' && currentInput !== '') {
         calculate();
     }
-    operator = op;
-    previousOperand = currentOperand;
-    currentOperand = '';
+    operator = selectedOperator;
+    previousInput = currentInput;
+    currentInput = '';
     updateDisplay();
 }
 
-function calculate() {
-    let result;
-    const prev = parseFloat(previousOperand);
-    const current = parseFloat(currentOperand);
+// Function to clear all input
+function clearAll() {
+    currentInput = '';
+    previousInput = '';
+    operator = undefined;
+    updateDisplay();
+}
 
-    if (isNaN(prev) || isNaN(current)) return;
+// Function to perform the calculation
+function calculate() {
+    let computation;
+    const prev = parseFloat(previousInput);
+    const curr = parseFloat(currentInput);
+    if (isNaN(prev) || isNaN(curr)) return;
 
     switch (operator) {
         case '+':
-            result = prev + current;
+            computation = prev + curr;
             break;
         case '-':
-            result = prev - current;
+            computation = prev - curr;
             break;
         case '*':
-            result = prev * current;
+            computation = prev * curr;
             break;
         case '/':
-            result = prev / current;
+            computation = prev / curr;
             break;
         default:
             return;
     }
-    currentOperand = result;
-    operator = null;
-    previousOperand = '';
+    currentInput = computation.toString();
+    operator = undefined;
+    previousInput = '';
     updateDisplay();
 }
 
+// Function to delete last character
 function deleteLast() {
-    if (currentOperand !== '') {
-        currentOperand = currentOperand.slice(0, -1);
-    } else if (operator !== null) {
-        operator = null;
-    } else if (previousOperand !== '') {
-        previousOperand = previousOperand.slice(0, -1);
-    }
+    currentInput = currentInput.slice(0, -1);
+    if (currentInput === '') currentInput = '0';
     updateDisplay();
 }
+
+// Event listener for keyboard input
+window.addEventListener('keydown', function (e) {
+    if (e.key >= '0' && e.key <= '9') {
+        appendNumber(e.key);
+    } else if (e.key === '+' || e.key === '-' || e.key === '*' || e.key === '/') {
+        chooseOperator(e.key);
+    } else if (e.key === 'Enter' || e.key === '=') {
+        calculate();
+    } else if (e.key === 'Backspace') {
+        deleteLast();
+    } else if (e.key === 'Escape') {
+        clearAll();
+    }
+});
